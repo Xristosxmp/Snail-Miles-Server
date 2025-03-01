@@ -1,6 +1,7 @@
 package com.snailmiles.app.Models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -25,7 +26,8 @@ public class User {
     private String email;
 
     @NotNull
-    @Column(nullable = false)  // Ensure password is not null
+    @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
 
