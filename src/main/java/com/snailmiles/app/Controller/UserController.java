@@ -39,6 +39,21 @@ public class UserController {
         }
     }
 
+    @PutMapping("/update/offline")
+    public ResponseEntity<User> updateUserOffile(@RequestBody UserUpdateRequest request) {
+        Optional<User> userOptional = userRepository.findById(request.getId());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setPoints(user.getPoints() + request.getPoints());
+            user.setWeeklyPoints(user.getWeeklyPoints() + request.getWeeklyPoints());
+            user.setUpdatedAt(new Date());
+            User updatedUser = userRepository.save(user);
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build(); // User not found
+        }
+    }
+
 
 
     @PutMapping("/update/password")
