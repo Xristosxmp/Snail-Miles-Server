@@ -42,7 +42,7 @@ public class WebSocketMessageController {
 
 
                 // Retrieve the user from the database
-                User user = userRepository.findById(userId).orElse(null);
+                User user = userRepository.findById(String.valueOf(userId)).orElse(null);
 
                 if (user != null) {
                     // Update user's points (subtract offer points)

@@ -1,19 +1,16 @@
 package com.snailmiles.app.Repo;
 
-import com.snailmiles.app.Models.User;
-import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 
+import com.snailmiles.app.Models.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
-
-
+    Optional<User> findById(String id);
     @Transactional
-    @Modifying
-    @Query("UPDATE User u SET u.weekly_points = 0")
+    @Query("{}, { $set: { weekly_points: 0 } }")
     void resetWeeklyPoints();
 }

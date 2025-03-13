@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Base64;
 import java.util.Set;
 
-@Entity
+@Document(collection = "companies")
 @Getter
 @Setter
 public class Company {

@@ -2,12 +2,14 @@ package com.snailmiles.app.Controller;
 
 import com.snailmiles.app.DTO.AuthRequest;
 import com.snailmiles.app.DTO.AuthResponse;
+import com.snailmiles.app.DTO.LogoutRequest;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repo.UserRepository;
 import com.snailmiles.app.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
@@ -21,11 +23,29 @@ import java.util.HexFormat;
 public class AuthController {
     @Autowired private AuthService authService;
     @Autowired private UserRepository userRepository;
-    @PostMapping public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) {
-        User user = authService.authenticate(request.getEmail(), request.getPassword());
-        if (user != null) return ResponseEntity.ok(new AuthResponse(user));
-        else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+    @Autowired private PasswordEncoder passwordEncoder;
+
+
+    @PostMapping
+    public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) {
+        try {
+            User user = authService.authenticate(
+                    request.getEmail(),
+                    request.getPassword(),
+                    request.getCurrent_device_token()
+            );
+            return ResponseEntity.ok(new AuthResponse(user));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
+
+    @PostMapping("logout")
+    public ResponseEntity<?> logout(@RequestBody LogoutRequest request) {
+        System.out.println("logout user email: " + request.getEmail());
+        return authService.logout(request.getEmail());
+    }
+
 
 
     @PostMapping("register/exist")
@@ -49,11 +69,11 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already exists");
         }
 
-        user.setPassword(hashPassword(user.getPassword()));
-        user.setCreatedAt(new Date());
-        user.setUpdatedAt(new Date());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreated_at(new Date());
+        user.setUpdated_at(new Date());
         user.setPoints(0);
-        user.setWeeklyPoints(0);
+        user.setWeekly_points(0);
 
         // Save user to database
         userRepository.save(user);
@@ -63,14 +83,5 @@ public class AuthController {
     }
 
 
-    private String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(hash); // Convert to hexadecimal string
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error hashing password", e);
-        }
-    }
 }
 
