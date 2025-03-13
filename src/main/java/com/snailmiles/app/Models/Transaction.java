@@ -16,11 +16,11 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    private Long userId;
-    private Long chainId;
-    private Long offerId;
+    private String userId;
+    private String chainId;
+    private String offerId;
     private Long offerPoints;
 
     @JsonFormat(pattern = "yyyy-MM-dd")  // Format the date in the desired pattern
@@ -31,7 +31,7 @@ public class Transaction {
     // Constructors
     public Transaction() {}
 
-    public Transaction(Long userId, Long chainId, Long offerId, Long offerPoints, Date createdAt) {
+    public Transaction(String userId, String chainId, String offerId, Long offerPoints, Date createdAt) {
         this.userId = userId;
         this.chainId = chainId;
         this.offerId = offerId;

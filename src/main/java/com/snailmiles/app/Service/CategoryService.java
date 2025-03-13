@@ -1,51 +1,98 @@
 package com.snailmiles.app.Service;
 
-
 import com.snailmiles.app.DTO.*;
 import com.snailmiles.app.Models.*;
 import com.snailmiles.app.Repo.CategoryRepository;
+import com.snailmiles.app.Repo.ChainRepository;
+import com.snailmiles.app.Repo.CompanyRepository;
+import com.snailmiles.app.Repo.OfferRepository;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-
-    public CategoryService(CategoryRepository categoryRepository) {
+    private final CompanyRepository companyRepository;
+    private final ChainRepository chainRepository;
+    private final OfferRepository offerRepository;
+    public CategoryService(CategoryRepository categoryRepository, CompanyRepository companyRepository, ChainRepository chainRepository, OfferRepository offerRepository) {
         this.categoryRepository = categoryRepository;
+        this.companyRepository = companyRepository;
+        this.chainRepository = chainRepository;
+        this.offerRepository = offerRepository;
     }
 
     public List<CategoryDTO> getAllCategoriesWithDetails() {
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = Optional.ofNullable(categoryRepository.findAll())
+                .orElse(Collections.emptyList());
+
         return categories.stream()
                 .map(this::mapToCategoryDTO)
                 .collect(Collectors.toList());
     }
 
     private CategoryDTO mapToCategoryDTO(Category category) {
-        Set<CompanyDTO> companyDTOs = category.getCompanies().stream()
+        if (category == null) return null;
+
+        // Fetch companies where category_id matches
+        Set<CompanyDTO> companyDTOs = Optional.ofNullable(companyRepository.findByCategory(category))
+                .orElse(Collections.emptyList()) // Use List instead of Set to prevent issues
+                .stream()
                 .map(this::mapToCompanyDTO)
                 .collect(Collectors.toSet());
-        return new CategoryDTO(category.getId(), category.getName(), category.getImageBase64() , companyDTOs);
+
+        return new CategoryDTO(
+                category.getId(),
+                Optional.ofNullable(category.getName()).orElse("Unknown Category"),
+                Optional.ofNullable(category.getImageBase64()).orElse(""),
+                companyDTOs
+        );
     }
 
     private CompanyDTO mapToCompanyDTO(Company company) {
-        Set<ChainDTO> chainDTOs = company.getChains().stream()
+        if (company == null) return null;
+
+        Set<ChainDTO> chainDTOs = Optional.ofNullable(chainRepository.findByCompany(company))
+                .orElse(Collections.emptyList()) // Fetch chains from MongoDB
+                .stream()
                 .map(this::mapToChainDTO)
                 .collect(Collectors.toSet());
-        return new CompanyDTO(company.getId(), company.getName(), company.getImageBase64(), chainDTOs);
+
+        return new CompanyDTO(
+                company.getId(),
+                Optional.ofNullable(company.getName()).orElse("Unknown Company"),
+                Optional.ofNullable(company.getImageBase64()).orElse(""),
+                chainDTOs
+        );
     }
 
     private ChainDTO mapToChainDTO(Chains chain) {
-        Set<OfferDTO> offerDTOs = chain.getOffers().stream()
+        if (chain == null) return null;
+
+        List<Offer> offs = offerRepository.findByChain(chain);
+        // Sort the list by requiredPoints
+        Set<OfferDTO> offerDTOs = offs.stream()
+                .sorted(Comparator.comparingInt(Offer::getRequiredPoints)) // Sort by requiredPoints (low to high)
                 .map(this::mapToOfferDTO)
-                .collect(Collectors.toSet());
-        return new ChainDTO(chain.getId(), chain.getName(), offerDTOs);
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        return new ChainDTO(
+                chain.getId(),
+                Optional.ofNullable(chain.getName()).orElse("Unknown Chain"),
+                offerDTOs
+        );
     }
 
     private OfferDTO mapToOfferDTO(Offer offer) {
-        return new OfferDTO(offer.getId(), offer.getTitle(), offer.getDescription(), offer.getRequiredPoints());
+        if (offer == null) return null;
+
+        return new OfferDTO(
+                offer.getId(),
+                Optional.ofNullable(offer.getTitle()).orElse("No Title"),
+                Optional.ofNullable(offer.getDescription()).orElse("No Description"),
+                Optional.ofNullable(offer.getRequiredPoints()).orElse(0)
+        );
     }
 }

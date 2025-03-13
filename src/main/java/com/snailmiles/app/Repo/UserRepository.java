@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
-    Optional<User> findById(String id);
     @Transactional
     @Query("{}, { $set: { weekly_points: 0 } }")
     void resetWeeklyPoints();

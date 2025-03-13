@@ -7,8 +7,8 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MyWebSocketHandler extends TextWebSocketHandler {
-    private static final Map<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
-    private static final Map<Long, Map<String, Object>> sessionsData = new ConcurrentHashMap<>();
+    private static final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+    private static final Map<String, Map<String, Object>> sessionsData = new ConcurrentHashMap<>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -24,9 +24,9 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         Map<String, Object> data = objectMapper.readValue(payload, Map.class);
 
         // Extract the values from the Map and convert to Long
-        Long userId = ((Number) data.get("user_id")).longValue();
-        Long offerId = ((Number) data.get("offer_id")).longValue();
-        Long chainId = ((Number) data.get("chain_id")).longValue();
+        String userId = ((String) data.get("user_id"));
+        String offerId = ((String) data.get("offer_id"));
+        String chainId = ((String) data.get("chain_id"));
         Long offerPoints = ((Number) data.get("offer_points")).longValue();
 
         // Store session and data
@@ -44,7 +44,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     }
 
     // Function to send a message to a specific user
-    public static void sendMessageToUser(Long userId, String message) throws Exception {
+    public static void sendMessageToUser(String userId, String message) throws Exception {
         WebSocketSession session = sessions.get(userId);
         if (session != null && session.isOpen()) {
             session.sendMessage(new TextMessage(message));
@@ -52,11 +52,11 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     }
 
     // Function to retrieve data for a specific user
-    public static Map<String, Object> getUserData(Long userId) {
+    public static Map<String, Object> getUserData(String userId) {
         return sessionsData.get(userId);
     }
 
-    public static boolean userExistFromSession(Long userId) {
+    public static boolean userExistFromSession(String userId) {
         if(sessions.get(userId) == null) return false;
         if(sessions.get(userId).isOpen()) return true;
         return false;

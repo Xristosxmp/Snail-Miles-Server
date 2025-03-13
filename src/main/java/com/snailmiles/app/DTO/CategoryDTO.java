@@ -7,12 +7,12 @@ import java.util.Set;
 @Getter
 @Setter
 public class CategoryDTO {
-    private Long id;
+    private String id;
     private String name;
     private String image;
     private Set<CompanyDTO> companies;
 
-    public CategoryDTO(Long id,
+    public CategoryDTO(String id,
                        String name,
                        String image,
                        Set<CompanyDTO> companies) {

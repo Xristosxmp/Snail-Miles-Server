@@ -7,12 +7,12 @@ import java.util.Set;
 @Getter
 @Setter
 public class CompanyDTO {
-    private Long id;
+    private String id;
     private String name;
     private String image;
     private Set<ChainDTO> chains;
 
-    public CompanyDTO(Long id, String name, String image, Set<ChainDTO> chains) {
+    public CompanyDTO(String id, String name, String image, Set<ChainDTO> chains) {
         this.id = id;
         this.name = name;
         this.image = image;

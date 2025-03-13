@@ -3,6 +3,7 @@ package com.snailmiles.app.Models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,12 +13,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 public class Offer {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String title;
     private String description;
+    @JsonProperty("required_points")
     private int requiredPoints;
 
     @ManyToOne

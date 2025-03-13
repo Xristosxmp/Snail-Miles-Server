@@ -15,16 +15,13 @@ import org.springframework.http.ResponseEntity;
 @RequestMapping("/api")
 public class WebSocketMessageController {
 
-    @Autowired
-    private UserRepository userRepository; // Inject UserRepository to access DB
-
-    @Autowired
-    TransactionRepository transactionRepository;
+    @Autowired private UserRepository userRepository; // Inject UserRepository to access DB
+    @Autowired private TransactionRepository transactionRepository;
 
     @PostMapping("/transanct")
     public ResponseEntity<String> sendMessageToUser(@RequestBody Map<String, Object> request) throws Exception {
         // Convert user_id from the request to Long (assuming user_id is passed as part of the request body)
-        Long userId = ((Number) request.get("user_id")).longValue();
+        String userId = (String) request.get("user_id");
         if(MyWebSocketHandler.userExistFromSession(userId) == false) return ResponseEntity.status(400).body("User with id " + userId + " not found with open Socket");
 
 
@@ -32,8 +29,8 @@ public class WebSocketMessageController {
         Map<String, Object> userData = MyWebSocketHandler.getUserData(userId);
 
         if (userData != null) {
-            Long offerId = ((Number) userData.get("offer_id")).longValue();
-            Long chainId = ((Number) userData.get("chain_id")).longValue();
+            String offerId = ((String) userData.get("offer_id"));
+            String chainId = ((String) userData.get("chain_id"));
             Long offerPoints = ((Number) userData.get("offer_points")).longValue();
 
             // Create a custom message
@@ -42,7 +39,7 @@ public class WebSocketMessageController {
 
 
                 // Retrieve the user from the database
-                User user = userRepository.findById(String.valueOf(userId)).orElse(null);
+                User user = userRepository.findById(userId).orElse(null);
 
                 if (user != null) {
                     // Update user's points (subtract offer points)

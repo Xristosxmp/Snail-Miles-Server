@@ -15,8 +15,7 @@ import java.util.Set;
 @Setter
 public class Company {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String name;
 
@@ -24,17 +23,22 @@ public class Company {
     @Column(columnDefinition = "LONGBLOB")
     private byte[] image;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
     private Category category;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Chains> chains;
 
-    @JsonProperty("image") // Include this field in the JSON response
+    // Ensure this field is stored in MongoDB
+    @JsonProperty("category_id")
+    public String getCategoryId() {
+        return category != null ? category.getId() : null;
+    }
+
+    @JsonProperty("image") // Include this field in JSON response
     public String getImageBase64() {
-        if (image == null) return null;
-        return Base64.getEncoder().encodeToString(image); // Convert byte[] to Base64 string
+        return image != null ? Base64.getEncoder().encodeToString(image) : null;
     }
 }
