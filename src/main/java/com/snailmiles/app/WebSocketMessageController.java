@@ -1,7 +1,11 @@
 package com.snailmiles.app;
 
+import com.snailmiles.app.Models.Chains;
+import com.snailmiles.app.Models.Offer;
 import com.snailmiles.app.Models.Transaction;
 import com.snailmiles.app.Models.User;
+import com.snailmiles.app.Repo.ChainRepository;
+import com.snailmiles.app.Repo.OfferRepository;
 import com.snailmiles.app.Repo.TransactionRepository;
 import com.snailmiles.app.Repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.http.ResponseEntity;
 
 @RestController
@@ -17,6 +23,8 @@ public class WebSocketMessageController {
 
     @Autowired private UserRepository userRepository; // Inject UserRepository to access DB
     @Autowired private TransactionRepository transactionRepository;
+    @Autowired private OfferRepository offerRepository;
+    @Autowired private ChainRepository chainRepository;
 
     @PostMapping("/transanct")
     public ResponseEntity<String> sendMessageToUser(@RequestBody Map<String, Object> request) throws Exception {
@@ -54,7 +62,9 @@ public class WebSocketMessageController {
                     // Send a message to the user via WebSocket
                     MyWebSocketHandler.sendMessageToUser(userId, message);
 
-                    Transaction transaction = new Transaction(userId, chainId, offerId, offerPoints, new Date());
+                    Chains chain = chainRepository.findById(chainId).get();
+                    Offer offer = offerRepository.findById(offerId).get();
+                    Transaction transaction = new Transaction(user, chain , offer, offerPoints, new Date());
                     transactionRepository.save(transaction);
                     return ResponseEntity.ok("User points updated to " + newPoints);
                 } else {

@@ -6,6 +6,7 @@ import lombok.Setter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Date;
 
@@ -15,26 +16,30 @@ import java.util.Date;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
-    private String userId;
-    private String chainId;
-    private String offerId;
+    @DBRef
+    private User user;
+
+    @DBRef
+    private Chains chain;  // Reference to Chain object
+
+    @DBRef
+    private Offer offer;  // Reference to Offer object
+
     private Long offerPoints;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")  // Format the date in the desired pattern
-    @JsonProperty("created_at")  // Map the field name in JSON to "created_at"
-    @Temporal(TemporalType.DATE)  // Store only the date (no time)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("created_at")
     private Date createdAt;
 
     // Constructors
     public Transaction() {}
 
-    public Transaction(String userId, String chainId, String offerId, Long offerPoints, Date createdAt) {
-        this.userId = userId;
-        this.chainId = chainId;
-        this.offerId = offerId;
+    public Transaction(User user, Chains chain, Offer offer, Long offerPoints, Date createdAt) {
+        this.user = user;
+        this.chain = chain;
+        this.offer = offer;
         this.offerPoints = offerPoints;
         this.createdAt = createdAt;
     }

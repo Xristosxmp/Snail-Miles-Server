@@ -12,7 +12,6 @@ import java.util.Set;
 @Getter
 @Setter
 public class Chains {
-
     @Id
     private String id;
 
