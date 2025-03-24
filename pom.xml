@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-messaging</artifactId>
-			<version>6.2.2</version>
+			<version>6.2.5</version>
 		</dependency>
 
 	</dependencies>

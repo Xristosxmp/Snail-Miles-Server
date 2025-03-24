@@ -15,10 +15,19 @@ import java.util.Date;
 @Setter
 public class TransactionDTO {
 
+    @JsonProperty("transaction_id")
     private String transactionId;
+
+    @JsonProperty("user_id")
     private User user;
+
+    @JsonProperty("chain_id")
     private Chains chain;
+
+    @JsonProperty("offer_id")
     private Offer offer;
+
+    @JsonProperty("offer_points")
     private Long offerPoints;
 
     @JsonFormat(pattern="yyyy-MM-dd")
