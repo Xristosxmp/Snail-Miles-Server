@@ -1,6 +1,7 @@
 package com.snailmiles.app.Models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class User {
     @JsonProperty("email")
     private String email;
 
+    @JsonIgnore
     @JsonProperty("password")
     private String password;
 

@@ -3,9 +3,12 @@ package com.snailmiles.app.Controller;
 import com.snailmiles.app.DTO.AuthRequest;
 import com.snailmiles.app.DTO.AuthResponse;
 import com.snailmiles.app.DTO.LogoutRequest;
+import com.snailmiles.app.DTO.register.CredentialsRequest;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repo.UserRepository;
 import com.snailmiles.app.Service.AuthService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +23,16 @@ import java.util.HexFormat;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@CrossOrigin
+@AllArgsConstructor
+@Slf4j
 public class AuthController {
-    @Autowired private AuthService authService;
-    @Autowired private UserRepository userRepository;
-    @Autowired private PasswordEncoder passwordEncoder;
+    private final AuthService authService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
-    @PostMapping
+    @PostMapping("/validation")
     public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) {
         try {
             User user = authService.authenticate(
@@ -40,7 +46,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("logout")
+    @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody LogoutRequest request) {
         System.out.println("logout user email: " + request.getEmail());
         return authService.logout(request.getEmail());
@@ -48,7 +54,7 @@ public class AuthController {
 
 
 
-    @PostMapping("register/exist")
+    @PostMapping("/register/exist")
     public ResponseEntity<String> checkEmailExistence(@RequestBody String email) {
         boolean emailExists = authService.doesEmailExist(email);
         System.out.println(email + " GOT " + emailExists);
@@ -57,29 +63,32 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        System.out.println(user.getEmail() + " is trying to register");
+    public ResponseEntity<?> register(@RequestBody CredentialsRequest request) {
+        log.info(request.getEmail() + " is trying to register");
+        log.info(request.getPassword() + " password");
 
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email is missing");
+
+        if (request.getEmail() == null || request.getEmail().isEmpty()) {
+            return ResponseEntity.badRequest().body("Email is missing");
         }
 
         // Check if email already exists
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already exists");
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email already exists");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setCreated_at(new Date());
-        user.setUpdated_at(new Date());
-        user.setPoints(0);
-        user.setWeekly_points(0);
+        User new_registed_user = new User();
+        new_registed_user.setEmail(request.getEmail());
+        new_registed_user.setPassword(passwordEncoder.encode(request.getPassword()));
+        new_registed_user.setCreated_at(new Date());
+        new_registed_user.setUpdated_at(new Date());
+        new_registed_user.setPoints(0);
+        new_registed_user.setWeekly_points(0);
 
-        // Save user to database
-        userRepository.save(user);
-        System.out.println(user.getEmail() + " REG");
+        userRepository.save(new_registed_user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+
+        return ResponseEntity.ok().body("User registered successfully");
     }
 
 
