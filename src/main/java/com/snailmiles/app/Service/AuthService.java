@@ -24,9 +24,7 @@ public class AuthService {
 
     public User authenticate(String email, String rawPassword, String deviceToken) {
         Optional<User> userOpt = userRepository.findByEmail(email);
-        System.out.println(email);
-        System.out.println(rawPassword);
-        System.out.println(deviceToken);
+
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (passwordEncoder.matches(rawPassword, user.getPassword())) {

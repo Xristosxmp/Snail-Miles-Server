@@ -1,28 +1,33 @@
 package com.snailmiles.app.Controller;
 
-import com.snailmiles.app.DTO.PasswordUpdateRequest;
+import com.snailmiles.app.DTO.passwordReset.PasswordResetResponse;
+import com.snailmiles.app.DTO.passwordReset.PasswordResetUpdateRequest;
+import com.snailmiles.app.DTO.passwordReset.UserPasswordUpdateRequest;
 import com.snailmiles.app.DTO.UserUpdateRequest;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repo.UserRepository;
+import com.snailmiles.app.Service.ResetPasswordService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.HexFormat;
+
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired private UserRepository userRepository;
-    @Autowired private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    private final ResetPasswordService resetPasswordService;
 
     // Endpoint to update user points and weeklyPoints by ID
     @PutMapping("/update")
@@ -62,8 +67,8 @@ public class UserController {
 
 
 
-    @PutMapping("/update/password")
-    public ResponseEntity<User> updatePassword(@RequestBody PasswordUpdateRequest request) {
+    @PatchMapping("/update/reset/password")
+    public ResponseEntity<User> updateResetPassword(@RequestBody PasswordResetUpdateRequest request) {
         Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -74,6 +79,11 @@ public class UserController {
         } else {
             return ResponseEntity.notFound().build(); // User not found
         }
+    }
+
+    @PatchMapping(value = "/update/password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PasswordResetResponse> updateUserPassword(@RequestBody UserPasswordUpdateRequest request) {
+        return resetPasswordService.updatePassword(request);
     }
 
 
