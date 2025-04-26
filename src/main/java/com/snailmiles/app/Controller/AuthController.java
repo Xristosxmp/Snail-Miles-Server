@@ -88,7 +88,7 @@ public class AuthController {
         userRepository.save(new_registed_user);
 
 
-        return ResponseEntity.ok().body("User registered successfully");
+        return ResponseEntity.status(201).body("User registered successfully");
     }
 
 
