@@ -1,6 +1,8 @@
 package com.snailmiles.app.Controller;
 
 import com.snailmiles.app.DTO.CategoryDTO;
+import com.snailmiles.app.DTO.categories.CategoriesResponse;
+import com.snailmiles.app.Models.Category;
 import com.snailmiles.app.Repo.CategoryRepository;
 import com.snailmiles.app.Service.CategoryService;
 import org.springframework.http.HttpHeaders;
@@ -21,11 +23,18 @@ public class ShopController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+    public ResponseEntity<CategoriesResponse> getAllCategories() {
+
+        CategoriesResponse out = new CategoriesResponse();
         List<CategoryDTO> categories = categoryService.getAllCategoriesWithDetails();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
-                .body(categories);
+
+        if(categories.isEmpty()){
+            out.setStatus(400);
+            out.setMessage("Δεν βρέθηκαν κατηγορίες καταστημάτων");
+        } else out.setCategories(categories);
+
+
+        return ResponseEntity.ok(out);
     }
 
 

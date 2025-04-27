@@ -48,7 +48,6 @@ public class GlobalResponseHeaderAdvice implements ResponseBodyAdvice<Object> {
         response.getHeaders().set(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
 
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7); // Remove "Bearer " prefix
 
@@ -73,7 +72,7 @@ public class GlobalResponseHeaderAdvice implements ResponseBodyAdvice<Object> {
             AUTHORIZATION_RESPONSE errorResponse = new AUTHORIZATION_RESPONSE();
             errorResponse.setStatus(401);
             errorResponse.setMessage("401 Unauthorized");
-            log.info("401 Unauthorized " + request.getURI());
+            log.info("401 Unauthorized MISSING " + request.getURI());
 
             return errorResponse;
         }

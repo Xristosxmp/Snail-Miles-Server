@@ -1,10 +1,11 @@
 package com.snailmiles.app.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Set;
 
@@ -17,11 +18,10 @@ public class Chains {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
     @JsonIgnore
-    private Company company; // Many-to-one relationship with Company
+    @DBRef
+    private Company company; // MongoDB reference to Company (if not embedded)
 
-    @OneToMany(mappedBy = "chain", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Offer> offers; // One-to-many relationship with Offer
+    @DBRef
+    private Set<Offer> offers; // MongoDB reference to Offer (if not embedded)
 }

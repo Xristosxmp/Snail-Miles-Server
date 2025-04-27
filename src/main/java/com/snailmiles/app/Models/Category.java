@@ -1,10 +1,13 @@
 package com.snailmiles.app.Models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.bson.types.Binary;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Base64;
 import java.util.Set;
@@ -18,18 +21,16 @@ public class Category {
 
     private String name;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
+    @Field("image")
     private byte[] image;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+    @DBRef
     private Set<Company> companies;
 
-
-    @JsonProperty("image") // Include this field in the JSON response
+    @JsonProperty("image")
     public String getImageBase64() {
         if (image == null) return null;
         return Base64.getEncoder().encodeToString(image); // Convert byte[] to Base64 string
     }
 }
-

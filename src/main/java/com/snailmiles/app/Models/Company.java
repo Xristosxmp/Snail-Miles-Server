@@ -2,10 +2,13 @@ package com.snailmiles.app.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.bson.types.Binary;
 
 import java.util.Base64;
 import java.util.Set;
@@ -19,23 +22,14 @@ public class Company {
 
     private String name;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] image;
+    @Field("image")
+    private byte[] image; // Using Binary to store image data as bytes
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @DBRef
+    private Category category; // MongoDB reference to Category (if not embedded)
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Chains> chains;
-
-    // Ensure this field is stored in MongoDB
-    @JsonProperty("category_id")
-    public String getCategoryId() {
-        return category != null ? category.getId() : null;
-    }
+    @DBRef
+    private Set<Chains> chains; // MongoDB reference to Chains (if not embedded)
 
     @JsonProperty("image") // Include this field in JSON response
     public String getImageBase64() {

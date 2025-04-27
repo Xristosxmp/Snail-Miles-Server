@@ -1,8 +1,9 @@
-package com.snailmiles.app.Controller;
+package com.snailmiles.app.Controller.transactions;
 
 
 
 import com.snailmiles.app.DTO.TransactionDTO;
+import com.snailmiles.app.DTO.transactions.CreateTransactionResponse;
 import com.snailmiles.app.Models.Transaction;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Models.Chains;
@@ -11,8 +12,7 @@ import com.snailmiles.app.Repo.TransactionRepository;
 import com.snailmiles.app.Repo.UserRepository;
 import com.snailmiles.app.Repo.ChainRepository;
 import com.snailmiles.app.Repo.OfferRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +21,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/transactions")
+@AllArgsConstructor
 public class TransactionController {
 
-    @Autowired private UserRepository userRepository; // Inject UserRepository to access DB
-    @Autowired private TransactionRepository transactionRepository;
-    @Autowired private OfferRepository offerRepository;
-    @Autowired private ChainRepository chainRepository;
+    private final UserRepository userRepository; // Inject UserRepository to access DB
+    private final TransactionRepository transactionRepository;
+    private final OfferRepository offerRepository;
+    private final ChainRepository chainRepository;
 
 
     // Helper method to map Transaction to TransactionDTO
@@ -50,23 +51,17 @@ public class TransactionController {
     public ResponseEntity<List<TransactionDTO>> userTransactions(@PathVariable String uid) {
         List<Transaction> transactions = Optional.ofNullable(transactionRepository.findByUserId(uid))
                 .orElse(Collections.emptyList());
-
         List<TransactionDTO> transactionDTOs = transactions.stream()
                 .map(this::mapToTransactionDTO)
                 .collect(Collectors.toList());
-
-        // Create the headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
-
-        // Return the response with the headers
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(transactionDTOs);
+        return ResponseEntity.ok().body(transactionDTOs);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createTransaction(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<CreateTransactionResponse> createTransaction(@RequestBody Map<String, Object> request) {
+
+        CreateTransactionResponse out = new CreateTransactionResponse();
+
         String user_id = (String) request.get("user_id");
         String offer_id = (String) request.get("offer_id");
         String chain_id = (String) request.get("chain_id");
@@ -76,14 +71,15 @@ public class TransactionController {
             int new_points = user.getPoints() - offerPoints.intValue();
             user.setPoints(new_points);
             userRepository.save(user);
-
             Chains chain = chainRepository.findById(chain_id).get();
             Offer offer = offerRepository.findById(offer_id).get();
             Transaction transaction = new Transaction(user, chain , offer, offerPoints, new Date());
             transactionRepository.save(transaction);
-            return ResponseEntity.ok("User points updated to " + new_points);
+        } else {
+            out.setStatus(400);
+            out.setMessage("Δεν βρέθηκε ο χρήστης για την δημιουργία συνναλαγής");
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(out);
     }
 }
 
