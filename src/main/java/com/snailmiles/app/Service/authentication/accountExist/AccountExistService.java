@@ -2,14 +2,12 @@ package com.snailmiles.app.Service.authentication.accountExist;
 
 import com.snailmiles.app.DTO.accountExist.AccountExistRequest;
 import com.snailmiles.app.DTO.accountExist.AccountExistResponse;
-import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repo.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Slf4j

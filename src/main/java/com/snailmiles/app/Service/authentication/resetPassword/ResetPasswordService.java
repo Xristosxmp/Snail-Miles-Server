@@ -1,5 +1,7 @@
-package com.snailmiles.app.Service;
+package com.snailmiles.app.Service.authentication.resetPassword;
 
+import com.snailmiles.app.DTO.accountRecovery.AccountRecoveryRequest;
+import com.snailmiles.app.DTO.accountRecovery.AccountRecoveryResponse;
 import com.snailmiles.app.DTO.passwordReset.PasswordResetResponse;
 import com.snailmiles.app.DTO.passwordReset.UserPasswordUpdateRequest;
 import com.snailmiles.app.Models.User;
@@ -9,9 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -52,5 +51,23 @@ public class ResetPasswordService {
             return ResponseEntity.ok(out);
         }
     }
+
+    public ResponseEntity<AccountRecoveryResponse> recoverPassword(final AccountRecoveryRequest request) {
+        User user = userRepository.findByEmail(request.getEmail());
+        AccountRecoveryResponse out = new AccountRecoveryResponse();
+
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            userRepository.save(user);
+            out.setStatus(200);
+            out.setMessage("Ο κωδικός πρόσβασης ενημερώθηκε επιτυχώς!");
+            return ResponseEntity.ok(out);
+        } else {
+            out.setStatus(400);
+            out.setMessage("Ο χρήστης με το email " + request.getEmail() + " δεν βρέθηκε!");
+            return ResponseEntity.ok(out);
+        }
+    }
+
 
 }
