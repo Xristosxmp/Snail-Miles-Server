@@ -23,12 +23,10 @@ public class ResetPasswordService {
 
 
     public ResponseEntity<PasswordResetResponse> updatePassword(final UserPasswordUpdateRequest request) {
-        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+        User user = userRepository.findByEmail(request.getEmail());
         PasswordResetResponse out = new PasswordResetResponse();
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
+        if (user != null) {
             if(passwordEncoder.matches(request.getNewPassword(),user.getPassword())){
                 out.setStatus(400);
                 out.setMessage("Ο νέος κωδικός πρόσβασης δεν μπορεί να είναι ίδιος με τον παλιό");

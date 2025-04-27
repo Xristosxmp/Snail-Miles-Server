@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CredentialsRequest {
+public class RegisterBodyRequest {
     private String email;
     private String password;
 }

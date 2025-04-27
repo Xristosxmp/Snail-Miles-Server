@@ -69,11 +69,9 @@ public class UserController {
 
     @PatchMapping("/update/reset/password")
     public ResponseEntity<User> updateResetPassword(@RequestBody PasswordResetUpdateRequest request) {
-        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+        User user = userRepository.findByEmail(request.getEmail());
+        if (user != null) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
-            user.setUpdated_at(new Date());
             User updatedUser = userRepository.save(user);
             return ResponseEntity.ok(updatedUser);
         } else {
