@@ -3,13 +3,11 @@ package com.snailmiles.app.Service.updates.points;
 import com.snailmiles.app.DTO.updates.points.UserUpdateRequest;
 import com.snailmiles.app.DTO.updates.points.UserUpdateResponse;
 import com.snailmiles.app.Models.User;
-import com.snailmiles.app.Repo.UserRepository;
+import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 

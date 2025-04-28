@@ -1,12 +1,9 @@
 package com.snailmiles.app.Controller;
 
-import com.snailmiles.app.DTO.passwordReset.PasswordResetResponse;
-import com.snailmiles.app.DTO.passwordReset.UserPasswordUpdateRequest;
 import com.snailmiles.app.Models.User;
-import com.snailmiles.app.Repo.UserRepository;
+import com.snailmiles.app.Repositories.UserRepository;
 import com.snailmiles.app.Service.authentication.resetPassword.ResetPasswordService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;

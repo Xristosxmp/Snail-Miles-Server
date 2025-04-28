@@ -1,15 +1,12 @@
-package com.snailmiles.app.Repo;
+package com.snailmiles.app.Repositories;
 
 
 import com.snailmiles.app.Models.User;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserRepository extends MongoRepository<User, String> {
     User findByEmail(String email);

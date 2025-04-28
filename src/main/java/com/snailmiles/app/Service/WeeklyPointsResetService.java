@@ -1,6 +1,6 @@
 package com.snailmiles.app.Service;
 
-import com.snailmiles.app.Repo.UserRepository;
+import com.snailmiles.app.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

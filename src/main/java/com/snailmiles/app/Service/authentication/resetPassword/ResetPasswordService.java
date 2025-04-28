@@ -5,7 +5,7 @@ import com.snailmiles.app.DTO.accountRecovery.AccountRecoveryResponse;
 import com.snailmiles.app.DTO.passwordReset.PasswordResetResponse;
 import com.snailmiles.app.DTO.passwordReset.UserPasswordUpdateRequest;
 import com.snailmiles.app.Models.User;
-import com.snailmiles.app.Repo.UserRepository;
+import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -18,6 +18,7 @@ public class Offer {
 
     private String title;
     private String description;
+    private String discount;
 
     @JsonProperty("required_points")
     private int requiredPoints;

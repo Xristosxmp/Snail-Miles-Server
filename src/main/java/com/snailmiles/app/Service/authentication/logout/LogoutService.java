@@ -3,7 +3,7 @@ package com.snailmiles.app.Service.authentication.logout;
 import com.snailmiles.app.DTO.logout.LogoutRequest;
 import com.snailmiles.app.DTO.logout.LogoutResponse;
 import com.snailmiles.app.Models.User;
-import com.snailmiles.app.Repo.UserRepository;
+import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -8,10 +8,10 @@ import com.snailmiles.app.Models.Transaction;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Models.Chains;
 import com.snailmiles.app.Models.Offer;
-import com.snailmiles.app.Repo.TransactionRepository;
-import com.snailmiles.app.Repo.UserRepository;
-import com.snailmiles.app.Repo.ChainRepository;
-import com.snailmiles.app.Repo.OfferRepository;
+import com.snailmiles.app.Repositories.TransactionRepository;
+import com.snailmiles.app.Repositories.UserRepository;
+import com.snailmiles.app.Repositories.ChainRepository;
+import com.snailmiles.app.Repositories.OfferRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TransactionController {
 
-    private final UserRepository userRepository; // Inject UserRepository to access DB
+    private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final OfferRepository offerRepository;
     private final ChainRepository chainRepository;

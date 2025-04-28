@@ -2,8 +2,8 @@ package com.snailmiles.app.Controller;
 
 import com.snailmiles.app.Models.Chains;
 import com.snailmiles.app.Models.Company;
-import com.snailmiles.app.Repo.ChainRepository;
-import com.snailmiles.app.Repo.CompanyRepository;
+import com.snailmiles.app.Repositories.ChainRepository;
+import com.snailmiles.app.Repositories.CompanyRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

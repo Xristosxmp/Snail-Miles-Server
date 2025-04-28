@@ -2,8 +2,8 @@ package com.snailmiles.app.Controller;
 
 import com.snailmiles.app.Models.Category;
 import com.snailmiles.app.Models.Company;
-import com.snailmiles.app.Repo.CategoryRepository;
-import com.snailmiles.app.Repo.CompanyRepository;
+import com.snailmiles.app.Repositories.CategoryRepository;
+import com.snailmiles.app.Repositories.CompanyRepository;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -4,7 +4,7 @@ package com.snailmiles.app.Service.authentication.register;
 import com.snailmiles.app.DTO.register.RegisterBodyRequest;
 import com.snailmiles.app.DTO.register.RegisterBodyResponse;
 import com.snailmiles.app.Models.User;
-import com.snailmiles.app.Repo.UserRepository;
+import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

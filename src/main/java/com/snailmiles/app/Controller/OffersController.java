@@ -1,10 +1,11 @@
 package com.snailmiles.app.Controller;
 
 
+import com.snailmiles.app.AdminControllers.AdminDTOS.OfferCreateRequest;
 import com.snailmiles.app.Models.Offer;
 import com.snailmiles.app.Models.Chains;
-import com.snailmiles.app.Repo.OfferRepository;
-import com.snailmiles.app.Repo.ChainRepository;
+import com.snailmiles.app.Repositories.OfferRepository;
+import com.snailmiles.app.Repositories.ChainRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,21 +24,19 @@ public class OffersController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createOffer(@RequestParam String title,
-                                         @RequestParam String description,
-                                         @RequestParam int requiredPoints,
-                                         @RequestParam String chainId) {
-        Optional<Chains> chainOptional = chainRepository.findById(chainId);
+    public ResponseEntity<?> createOffer(@RequestBody OfferCreateRequest request) {
+        Optional<Chains> chainOptional = chainRepository.findById(request.getChain_id());
 
         if (chainOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body("Chain not found with ID: " + chainId);
+            return ResponseEntity.badRequest().body("Chain not found with ID: " + request.getChain_id());
         }
 
         Chains chain = chainOptional.get();
         Offer offer = new Offer();
-        offer.setTitle(title);
-        offer.setDescription(description);
-        offer.setRequiredPoints(requiredPoints);
+        offer.setTitle(request.getTittle());
+        offer.setDescription(request.getDescription());
+        offer.setRequiredPoints(request.getRequired_points());
+        offer.setDiscount(request.getDiscount());
         offer.setChain(chain);
 
         offerRepository.save(offer);

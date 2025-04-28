@@ -1,7 +1,7 @@
 package com.snailmiles.app.Controller;
 
 import com.snailmiles.app.Models.Category;
-import com.snailmiles.app.Repo.CategoryRepository;
+import com.snailmiles.app.Repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

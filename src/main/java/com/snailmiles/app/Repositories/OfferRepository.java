@@ -1,4 +1,4 @@
-package com.snailmiles.app.Repo;
+package com.snailmiles.app.Repositories;
 
 
 import com.snailmiles.app.Models.Offer;

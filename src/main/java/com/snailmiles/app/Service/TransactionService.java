@@ -5,7 +5,7 @@ import com.snailmiles.app.DTO.TransactionDTO;
 import com.snailmiles.app.Models.Chains;
 import com.snailmiles.app.Models.Offer;
 import com.snailmiles.app.Models.Transaction;
-import com.snailmiles.app.Repo.TransactionRepository;
+import com.snailmiles.app.Repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

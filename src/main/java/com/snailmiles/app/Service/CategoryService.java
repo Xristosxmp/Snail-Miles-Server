@@ -2,10 +2,10 @@ package com.snailmiles.app.Service;
 
 import com.snailmiles.app.DTO.*;
 import com.snailmiles.app.Models.*;
-import com.snailmiles.app.Repo.CategoryRepository;
-import com.snailmiles.app.Repo.ChainRepository;
-import com.snailmiles.app.Repo.CompanyRepository;
-import com.snailmiles.app.Repo.OfferRepository;
+import com.snailmiles.app.Repositories.CategoryRepository;
+import com.snailmiles.app.Repositories.ChainRepository;
+import com.snailmiles.app.Repositories.CompanyRepository;
+import com.snailmiles.app.Repositories.OfferRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -92,7 +92,8 @@ public class CategoryService {
                 offer.getId(),
                 Optional.ofNullable(offer.getTitle()).orElse("No Title"),
                 Optional.ofNullable(offer.getDescription()).orElse("No Description"),
-                Optional.ofNullable(offer.getRequiredPoints()).orElse(0)
+                Optional.ofNullable(offer.getRequiredPoints()).orElse(0),
+                Optional.ofNullable(offer.getDiscount()).orElse("?%")
         );
     }
 }

@@ -2,10 +2,8 @@ package com.snailmiles.app.Controller;
 
 import com.snailmiles.app.DTO.CategoryDTO;
 import com.snailmiles.app.DTO.categories.CategoriesResponse;
-import com.snailmiles.app.Models.Category;
-import com.snailmiles.app.Repo.CategoryRepository;
+import com.snailmiles.app.Repositories.CategoryRepository;
 import com.snailmiles.app.Service.CategoryService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
