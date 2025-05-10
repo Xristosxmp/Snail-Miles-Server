@@ -1,6 +1,7 @@
 package com.snailmiles.app.Advice;
 
 import com.snailmiles.app.Exceptions.InvalidApiKeyException;
+import com.snailmiles.app.Exceptions.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,6 +13,12 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidApiKeyException.class)
     public String handleInvalidKey(){
+        return "Unauthorized";
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UnauthorizedException.class)
+    public String handleUnauthorizedException(){
         return "Unauthorized";
     }
 

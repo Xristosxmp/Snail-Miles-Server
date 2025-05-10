@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -12,8 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Document(collection = "users")
-@Getter
-@Setter
+@Data
 public class User {
 
     @Id
@@ -42,4 +42,7 @@ public class User {
 
     @JsonProperty("device_current_token")
     private String device_current_token;
+
+    @JsonProperty("token")
+    private String token;
 }

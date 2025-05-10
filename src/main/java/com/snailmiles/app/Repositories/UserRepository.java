@@ -17,4 +17,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     List<User> findAll();
     long count();
+
+    User findByToken(String token);
 }
