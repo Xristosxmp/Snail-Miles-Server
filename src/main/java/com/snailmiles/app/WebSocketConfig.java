@@ -2,6 +2,7 @@ package com.snailmiles.app;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
@@ -21,4 +22,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/api/v1/socket").setAllowedOrigins("*");
         System.out.println("Stopmp endpoint registered");
     }
+
+
 }

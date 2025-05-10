@@ -17,7 +17,7 @@ public class AccountExistController {
     private final AccountExistService accountExistService;
 
     @PostMapping("/account")
-    public ResponseEntity<AccountExistResponse> checkAccountExist(@RequestBody AccountExistRequest request) {
+    public AccountExistResponse checkAccountExist(@RequestBody AccountExistRequest request) {
         return accountExistService.exists(request);
     }
 }

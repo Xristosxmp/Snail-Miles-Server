@@ -15,12 +15,10 @@ public class AccountExistService {
 
     private final UserRepository userRepository;
 
-    public ResponseEntity<AccountExistResponse> exists(final AccountExistRequest req) {
+    public AccountExistResponse exists(final AccountExistRequest req) {
         int status = userRepository.findByEmail(req.getEmail()) != null ? 400 : 200;
-        AccountExistResponse out = new AccountExistResponse();
-        out.setStatus(status);
-        if(status == 400) out.setMessage("Το email που χρησιμοποιήσατε υπάρχει ήδη στην βάση δεδομένων μας. Δοκιμάστε κάποιο άλλο!");
-        return ResponseEntity.ok(out);
+        String message = "Το email που χρησιμοποιήσατε υπάρχει ήδη στην βάση δεδομένων μας. Δοκιμάστε κάποιο άλλο!";
+        return AccountExistResponse.builder().withStatus(status).withMessage(message).build();
     }
 
 }
