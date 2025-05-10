@@ -2,7 +2,7 @@ package com.snailmiles.app.Service.authentication.register;
 
 
 import com.snailmiles.app.DTO.register.RegisterBodyRequest;
-import com.snailmiles.app.DTO.register.RegisterBodyResponse;
+import com.snailmiles.app.Exceptions.RegisterServiceException;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 
 @Service
@@ -21,33 +20,28 @@ public class RegisterService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<RegisterBodyResponse> register(final RegisterBodyRequest request){
-        RegisterBodyResponse out = new RegisterBodyResponse();
+    public ResponseEntity<Void> register(final RegisterBodyRequest request){
 
         if (request.getEmail() == null || request.getEmail().isEmpty()) {
-            out.setStatus(400);
-            out.setMessage("Πρόβλημα με την παράμετρο email. Δοκιμάστε ξανά");
-            return ResponseEntity.ok(out);
+            throw new RegisterServiceException("Πρόβλημα με την παράμετρο email. Δοκιμάστε ξανά");
         }
 
         // Check if email already exists
         if (userRepository.findByEmail(request.getEmail()) != null) {
-            out.setStatus(400);
-            out.setMessage("Το email που χρησιμοποιήσατε υπάρχει ήδη στην βάση δεδομένων μας. Δοκιμάστε κάποιο άλλο!");
-            return ResponseEntity.ok(out);
+            throw new RegisterServiceException("Το email που χρησιμοποιήσατε υπάρχει ήδη στην βάση δεδομένων μας. Δοκιμάστε κάποιο άλλο!");
         }
 
-        User new_registed_user = new User();
-        new_registed_user.setEmail(request.getEmail());
-        new_registed_user.setPassword(passwordEncoder.encode(request.getPassword()));
-        new_registed_user.setCreated_at(new Date());
-        new_registed_user.setUpdated_at(new Date());
-        new_registed_user.setPoints(0);
-        new_registed_user.setWeekly_points(0);
-        userRepository.save(new_registed_user);
+        userRepository.save(
+                User.builder().
+                withEmail(request.getEmail()).
+                withPassword(passwordEncoder.encode(request.getPassword())).
+                withCreated_at(new Date()).
+                withUpdated_at(new Date()).
+                withPoints(0).
+                withWeekly_points(0)
+                .build());
 
-
-        return ResponseEntity.ok(out);
+        return ResponseEntity.ok().build();
     }
 
 

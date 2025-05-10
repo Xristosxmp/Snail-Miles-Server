@@ -1,7 +1,7 @@
-package com.snailmiles.app.AdminControllers;
+package com.snailmiles.app.admin.AdminControllers;
 
-import com.snailmiles.app.AdminControllers.AdminDTOS.AdminUserUpdateRequest;
-import com.snailmiles.app.DTO.AdminUsersResponse;
+import com.snailmiles.app.admin.AdminControllers.AdminDTOS.AdminUserUpdateRequest;
+import com.snailmiles.app.admin.AdminUsersResponse;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;

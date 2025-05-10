@@ -39,7 +39,7 @@ public class SecurityHandler implements HandlerInterceptor {
         if(request.getHeader("Authorization") == null) throw new InvalidApiKeyException("Unauthorized Authorization");
         if(userRepository.findByToken(request.getHeader("Authorization")) == null)
         {
-            throw new InvalidApiKeyException("Unauthorized Authorization");
+            throw new InvalidApiKeyException("Invalid/Expired Token Session");
         }
 
 

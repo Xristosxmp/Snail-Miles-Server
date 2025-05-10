@@ -17,6 +17,7 @@ public class LoginResponse {
     @JsonProperty("email") private String email;
     @JsonProperty("points") private int points;
     @JsonProperty("weekly_points") private int weekly_points;
-    @JsonProperty("status") private int status = 200;
     @JsonProperty("device_current_token") private String device_current_token;
+    @JsonProperty("token") private String token;
+
 }

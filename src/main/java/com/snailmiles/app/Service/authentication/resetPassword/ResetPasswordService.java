@@ -1,9 +1,9 @@
 package com.snailmiles.app.Service.authentication.resetPassword;
 
 import com.snailmiles.app.DTO.accountRecovery.AccountRecoveryRequest;
-import com.snailmiles.app.DTO.accountRecovery.AccountRecoveryResponse;
-import com.snailmiles.app.DTO.passwordReset.PasswordResetResponse;
 import com.snailmiles.app.DTO.passwordReset.UserPasswordUpdateRequest;
+import com.snailmiles.app.Exceptions.AccountNotFoundException;
+import com.snailmiles.app.Exceptions.ResetPasswordServiceException;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -21,52 +21,26 @@ public class ResetPasswordService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public ResponseEntity<PasswordResetResponse> updatePassword(final UserPasswordUpdateRequest request) {
+    public ResponseEntity<Void> updatePassword(final UserPasswordUpdateRequest request) {
         User user = userRepository.findByEmail(request.getEmail());
-        PasswordResetResponse out = new PasswordResetResponse();
 
         if (user != null) {
-            if(passwordEncoder.matches(request.getNewPassword(),user.getPassword())){
-                out.setStatus(400);
-                out.setMessage("Ο νέος κωδικός πρόσβασης δεν μπορεί να είναι ίδιος με τον παλιό");
-                return ResponseEntity.ok(out);
-            }
+            if(passwordEncoder.matches(request.getNewPassword(),user.getPassword())) throw new ResetPasswordServiceException("Ο νέος κωδικός πρόσβασης δεν μπορεί να είναι ίδιος με τον παλιό");
+            if(!passwordEncoder.matches(request.getCurrentPassword(),user.getPassword())) throw new ResetPasswordServiceException("Λάθος τρέχον κωδικός πρόβασης, δοκιμάστε διαφορετικό κωδικό");
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+            return ResponseEntity.ok().build();
+        } else  throw new AccountNotFoundException("Ο χρήστης δεν βρέθηκε κατά την αλλαγή κωδικού πρόσβασης");
 
-            if(passwordEncoder.matches(request.getCurrentPassword(),user.getPassword())){
-                user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-                userRepository.save(user);
-                out.setStatus(200);
-                out.setMessage("Ο κωδικός πρόσβασης ενημερώθηκε επιτυχώς!");
-            }
-            else{
-                out.setStatus(400);
-                out.setMessage("Λάθος τρέχον κωδικός πρόβασης, δοκιμάστε διαφορετικό κωδικό");
-            }
-
-
-            return ResponseEntity.ok(out);
-        } else {
-            out.setStatus(500);
-            out.setMessage("Ο χρήστης με το email " + request.getEmail() + " δεν βρέθηκε!");
-            return ResponseEntity.ok(out);
-        }
     }
 
-    public ResponseEntity<AccountRecoveryResponse> recoverPassword(final AccountRecoveryRequest request) {
+    public ResponseEntity<Void> recoverPassword(final AccountRecoveryRequest request) {
         User user = userRepository.findByEmail(request.getEmail());
-        AccountRecoveryResponse out = new AccountRecoveryResponse();
-
         if (user != null) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepository.save(user);
-            out.setStatus(200);
-            out.setMessage("Ο κωδικός πρόσβασης ενημερώθηκε επιτυχώς!");
-            return ResponseEntity.ok(out);
-        } else {
-            out.setStatus(400);
-            out.setMessage("Ο χρήστης με το email " + request.getEmail() + " δεν βρέθηκε!");
-            return ResponseEntity.ok(out);
-        }
+            return ResponseEntity.ok().build();
+        } throw new AccountNotFoundException("Δεν βρέθηκε λογαριασμός με αυτό το email κατά την επαναφορά κωδικού πρόσβασης");
     }
 
 

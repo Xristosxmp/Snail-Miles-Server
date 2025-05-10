@@ -1,7 +1,7 @@
 package com.snailmiles.app.Controller;
 
 
-import com.snailmiles.app.AdminControllers.AdminDTOS.OfferCreateRequest;
+import com.snailmiles.app.admin.AdminControllers.AdminDTOS.OfferCreateRequest;
 import com.snailmiles.app.Models.Offer;
 import com.snailmiles.app.Models.Chains;
 import com.snailmiles.app.Repositories.OfferRepository;

@@ -1,5 +1,6 @@
 package com.snailmiles.app.Service.authentication.login;
 
+import com.snailmiles.app.Config.SecurityConfig;
 import com.snailmiles.app.DTO.login.LoginBadResponse;
 import com.snailmiles.app.DTO.login.LoginRequest;
 import com.snailmiles.app.DTO.login.LoginResponse;
@@ -22,13 +23,11 @@ public class LoginService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final SecureRandom secureRandom = new SecureRandom();
-    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 
     public LoginResponse authenticate(final LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail());
         if (user != null) {
-            if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 if(user.getDevice_current_token() == null){
                     user.setDevice_current_token(request.getCurrent_device_token());
                     userRepository.save(user);
@@ -38,14 +37,14 @@ public class LoginService {
                     throw new UnauthorizedException("Αυτός ο λογαριασμός είναι ήδη συνδεδεμένος σε διαφορετική συσκευή. Παρακαλώ αποσυνδεθείτε από αυτή για να συνεχίσετε.");
                 }
 
-                user.setToken(generateNewToken());
+                user.setToken(SecurityConfig.generateNewToken());
                 userRepository.save(user);
                 return LoginResponse.builder().
                         withId(user.getId()).
                         withEmail(user.getEmail()).
                         withPoints(user.getPoints()).
                         withWeekly_points(user.getWeekly_points()).
-                        withDevice_current_token(request.getCurrent_device_token())
+                        withDevice_current_token(request.getCurrent_device_token()).withToken(user.getToken())
                         .build();
             }
         } throw new UnauthorizedException("Δεν βρέθηκε λογαριασμός με αυτό το όνομα και κωδικό");
@@ -53,12 +52,7 @@ public class LoginService {
 
 
 
-    public static String generateNewToken() {
-        byte[] randomBytes = new byte[1600];
-        secureRandom.nextBytes(randomBytes);
-        return base64Encoder.encodeToString(randomBytes);
 
-    }
 
 }
 

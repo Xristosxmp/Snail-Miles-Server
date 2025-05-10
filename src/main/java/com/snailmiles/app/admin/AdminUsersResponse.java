@@ -1,4 +1,4 @@
-package com.snailmiles.app.DTO;
+package com.snailmiles.app.admin;
 
 import com.snailmiles.app.Models.User;
 import lombok.Getter;

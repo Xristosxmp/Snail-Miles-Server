@@ -1,7 +1,10 @@
 package com.snailmiles.app.Service.updates.points;
 
+import com.snailmiles.app.Config.SecurityConfig;
 import com.snailmiles.app.DTO.updates.points.UserUpdateRequest;
 import com.snailmiles.app.DTO.updates.points.UserUpdateResponse;
+import com.snailmiles.app.Exceptions.AccountNotFoundException;
+import com.snailmiles.app.Exceptions.InternalErrorException;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,25 +20,23 @@ import java.util.Optional;
 public class UserUpdatePointsService {
     private final UserRepository userRepository;
 
-    public ResponseEntity<UserUpdateResponse> update(final UserUpdateRequest request) {
-        Optional<User> userOptional = userRepository.findById(request.getId());
-        UserUpdateResponse out = new UserUpdateResponse();
-        if (userOptional.isPresent()) {
+    public UserUpdateResponse update(final UserUpdateRequest request, final String token) {
+        User user = userRepository.findByToken(token);
+
+        if (user != null) {
             try {
-                User user = userOptional.get();
                 user.setPoints(request.getPoints());
                 user.setWeekly_points(request.getWeekly_points());
+                String new_token = SecurityConfig.generateNewToken();
+                user.setToken(new_token);
                 userRepository.save(user);
-                out.setStatus(200);
-                return ResponseEntity.ok(out);
+
+                return UserUpdateResponse.builder().withToken(new_token).build();
             } catch (Exception e) {
-                out.setStatus(400);
-                return ResponseEntity.ok(out);
+                throw new InternalErrorException("Προέκυψε σφάλμα κατά το update του χρήστη: " + user.getId());
             }
         } else {
-            out.setStatus(400);
-            out.setMessage("Δεν βρέθηκε ο χρήστης");
-            return ResponseEntity.ok(out);
+            throw new AccountNotFoundException("");
         }
     }
 

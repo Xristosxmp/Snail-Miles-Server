@@ -1,4 +1,4 @@
-package com.snailmiles.app.AdminControllers.AdminDTOS;
+package com.snailmiles.app.admin.AdminControllers.AdminDTOS;
 
 import lombok.Getter;
 import lombok.Setter;
