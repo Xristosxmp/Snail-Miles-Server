@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 @Document(collection = "users")
@@ -52,4 +53,8 @@ public class User {
 
     @JsonProperty("token")
     private String token;
+
+    @JsonProperty("token_expiration")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date tokenExpiration;
 }

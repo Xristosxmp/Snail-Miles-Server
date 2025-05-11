@@ -2,7 +2,7 @@ package com.snailmiles.app.Controller.transactions;
 
 
 
-import com.snailmiles.app.DTO.TransactionDTO;
+import com.snailmiles.app.DTO.shops.TransactionDTO;
 import com.snailmiles.app.DTO.transactions.CreateTransactionResponse;
 import com.snailmiles.app.Models.Transaction;
 import com.snailmiles.app.Models.User;

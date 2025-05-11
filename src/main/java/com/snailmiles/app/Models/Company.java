@@ -2,6 +2,7 @@ package com.snailmiles.app.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -14,8 +15,7 @@ import java.util.Base64;
 import java.util.Set;
 
 @Document(collection = "companies")
-@Getter
-@Setter
+@Data
 public class Company {
     @Id
     private String id;

@@ -1,11 +1,16 @@
 package com.snailmiles.app.admin.AdminControllers.AdminDTOS;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.snailmiles.app.Models.Category;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
+
+@Data
+@Builder(setterPrefix = "with")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonDeserialize(builder = OfferCreateRequest.OfferCreateRequestBuilder.class)
 public class OfferCreateRequest {
     private String chain_id;
     private String tittle;

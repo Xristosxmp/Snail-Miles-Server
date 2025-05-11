@@ -1,32 +1,34 @@
-package com.snailmiles.app.Service;
+package com.snailmiles.app.Service.category;
 
-import com.snailmiles.app.DTO.*;
+import com.snailmiles.app.DTO.shops.CategoryDTO;
+import com.snailmiles.app.DTO.shops.ChainDTO;
+import com.snailmiles.app.DTO.shops.CompanyDTO;
+import com.snailmiles.app.DTO.shops.OfferDTO;
+import com.snailmiles.app.Exceptions.categories.CategoriesException;
 import com.snailmiles.app.Models.*;
 import com.snailmiles.app.Repositories.CategoryRepository;
 import com.snailmiles.app.Repositories.ChainRepository;
 import com.snailmiles.app.Repositories.CompanyRepository;
 import com.snailmiles.app.Repositories.OfferRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CompanyRepository companyRepository;
     private final ChainRepository chainRepository;
     private final OfferRepository offerRepository;
-    public CategoryService(CategoryRepository categoryRepository, CompanyRepository companyRepository, ChainRepository chainRepository, OfferRepository offerRepository) {
-        this.categoryRepository = categoryRepository;
-        this.companyRepository = companyRepository;
-        this.chainRepository = chainRepository;
-        this.offerRepository = offerRepository;
-    }
 
     public List<CategoryDTO> getAllCategoriesWithDetails() {
         List<Category> categories = Optional.ofNullable(categoryRepository.findAll())
                 .orElse(Collections.emptyList());
+
+        if(categories.isEmpty()) throw new CategoriesException("Δεν βρέθηκαν κατηγορίες καταστημάτων");
 
         return categories.stream()
                 .map(this::mapToCategoryDTO)

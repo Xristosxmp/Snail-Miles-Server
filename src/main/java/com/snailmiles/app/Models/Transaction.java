@@ -1,5 +1,6 @@
 package com.snailmiles.app.Models;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,8 +12,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import java.util.Date;
 
 @Document(collection = "transactions")
-@Getter
-@Setter
+@Data
 public class Transaction {
 
     @Id

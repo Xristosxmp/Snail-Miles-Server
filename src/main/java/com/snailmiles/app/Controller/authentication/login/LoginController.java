@@ -21,9 +21,14 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @PostMapping(value = "/validation",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(
+            value = "/validation",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public LoginResponse authenticate(@RequestBody LoginRequest request) {
         return loginService.authenticate(request);
     }
+
 
 }

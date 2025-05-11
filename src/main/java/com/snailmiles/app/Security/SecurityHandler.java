@@ -1,15 +1,20 @@
-package com.snailmiles.app.Advice;
+package com.snailmiles.app.Security;
 
 import com.snailmiles.app.Annotations.SkipSecurity;
+import com.snailmiles.app.Exceptions.expiredApiKey.ExpiredApiKeyException;
 import com.snailmiles.app.Exceptions.InvalidApiKeyException;
+import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.util.Date;
 
 @Component
 @Slf4j
@@ -34,12 +39,21 @@ public class SecurityHandler implements HandlerInterceptor {
         }
 
 
-
-
         if(request.getHeader("Authorization") == null) throw new InvalidApiKeyException("Unauthorized Authorization");
         if(userRepository.findByToken(request.getHeader("Authorization")) == null)
         {
             throw new InvalidApiKeyException("Invalid/Expired Token Session");
+        }
+
+        User user = userRepository.findByToken(request.getHeader("Authorization"));
+        Date now = new Date();
+        Date token_expiration = user.getTokenExpiration();
+
+        log.info(now.toString());
+        log.info(token_expiration.toString());
+        if (token_expiration == null || now.after(token_expiration)) {
+            log.info("Expired Token Session");
+            throw new ExpiredApiKeyException("Expired Token Session", user);
         }
 
 

@@ -1,11 +1,12 @@
 package com.snailmiles.app.Service;
 
 
-import com.snailmiles.app.DTO.TransactionDTO;
+import com.snailmiles.app.DTO.shops.TransactionDTO;
 import com.snailmiles.app.Models.Chains;
 import com.snailmiles.app.Models.Offer;
 import com.snailmiles.app.Models.Transaction;
 import com.snailmiles.app.Repositories.TransactionRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,10 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
-
-    @Autowired
-    public TransactionService(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
-    }
 
     // Method to fetch all transactions for a given userId and include details about Offer and Chain
     public List<TransactionDTO> getTransactionsWithDetails(String userId) {

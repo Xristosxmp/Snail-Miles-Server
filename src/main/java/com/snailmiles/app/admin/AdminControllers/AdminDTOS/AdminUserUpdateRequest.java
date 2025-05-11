@@ -1,11 +1,11 @@
 package com.snailmiles.app.admin.AdminControllers.AdminDTOS;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class AdminUserUpdateRequest {
 
     @JsonProperty("email")

@@ -1,4 +1,4 @@
-package com.snailmiles.app.DTO;
+package com.snailmiles.app.DTO.shops;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class LoginService {
     public LoginResponse authenticate(final LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail());
         if (user != null) {
-            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 if(user.getDevice_current_token() == null){
                     user.setDevice_current_token(request.getCurrent_device_token());
                     userRepository.save(user);
@@ -37,6 +39,9 @@ public class LoginService {
                     throw new UnauthorizedException("Αυτός ο λογαριασμός είναι ήδη συνδεδεμένος σε διαφορετική συσκευή. Παρακαλώ αποσυνδεθείτε από αυτή για να συνεχίσετε.");
                 }
 
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.HOUR, 1);
+                user.setTokenExpiration(calendar.getTime());
                 user.setToken(SecurityConfig.generateNewToken());
                 userRepository.save(user);
                 return LoginResponse.builder().
@@ -47,7 +52,9 @@ public class LoginService {
                         withDevice_current_token(request.getCurrent_device_token()).withToken(user.getToken())
                         .build();
             }
-        } throw new UnauthorizedException("Δεν βρέθηκε λογαριασμός με αυτό το όνομα και κωδικό");
+        }
+        log.info("Δεν βρέθηκε λογαριασμός με αυτό το όνομα και κωδικό");
+        throw new UnauthorizedException("Δεν βρέθηκε λογαριασμός με αυτό το όνομα και κωδικό");
     }
 
 

@@ -1,6 +1,11 @@
 package com.snailmiles.app.Models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.snailmiles.app.DTO.accountRecovery.AccountRecoveryRequest;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
@@ -13,8 +18,10 @@ import java.util.Base64;
 import java.util.Set;
 
 @Document(collection = "categories")
-@Getter
-@Setter
+@Data
+@Builder(setterPrefix = "with")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonDeserialize(builder = Category.CategoryBuilder.class)
 public class Category {
     @Id
     private String id;
@@ -23,7 +30,6 @@ public class Category {
 
     @Field("image")
     private byte[] image;
-
 
     @DBRef
     private Set<Company> companies;
