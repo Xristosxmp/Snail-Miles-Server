@@ -40,7 +40,7 @@ public class LoginService {
                 }
 
                 Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.HOUR, 1);
+                calendar.add(Calendar.MINUTE, 10);
                 user.setTokenExpiration(calendar.getTime());
                 user.setToken(SecurityConfig.generateNewToken());
                 userRepository.save(user);
@@ -53,7 +53,6 @@ public class LoginService {
                         .build();
             }
         }
-        log.info("Δεν βρέθηκε λογαριασμός με αυτό το όνομα και κωδικό");
         throw new UnauthorizedException("Δεν βρέθηκε λογαριασμός με αυτό το όνομα και κωδικό");
     }
 

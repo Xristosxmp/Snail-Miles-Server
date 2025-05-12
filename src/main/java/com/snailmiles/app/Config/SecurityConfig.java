@@ -20,6 +20,5 @@ public class SecurityConfig {
         Base64.Encoder base64Encoder = Base64.getUrlEncoder();
         secureRandom.nextBytes(randomBytes);
         return base64Encoder.encodeToString(randomBytes);
-
     }
 }

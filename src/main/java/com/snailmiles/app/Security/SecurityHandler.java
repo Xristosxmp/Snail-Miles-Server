@@ -24,9 +24,14 @@ public class SecurityHandler implements HandlerInterceptor {
     @Value("${private.token}")
     private String token;
 
+    @Value("${spring.profiles.active}")
+    private String profile;
+
     private final UserRepository userRepository;
 
     @Override public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if("debug".equals(profile)) return true;
+
         if(request.getHeader("API-KEY") == null) throw new InvalidApiKeyException("Unauthorized");
         if(!request.getHeader("API-KEY").equals(token)) throw new InvalidApiKeyException("Unauthorized");
 
@@ -46,13 +51,7 @@ public class SecurityHandler implements HandlerInterceptor {
         }
 
         User user = userRepository.findByToken(request.getHeader("Authorization"));
-        Date now = new Date();
-        Date token_expiration = user.getTokenExpiration();
-
-        log.info(now.toString());
-        log.info(token_expiration.toString());
-        if (token_expiration == null || now.after(token_expiration)) {
-            log.info("Expired Token Session");
+        if (user.getTokenExpiration() == null || new Date().after(user.getTokenExpiration())) {
             throw new ExpiredApiKeyException("Expired Token Session", user);
         }
 

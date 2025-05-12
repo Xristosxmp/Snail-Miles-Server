@@ -1,6 +1,9 @@
 package com.snailmiles.app.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +15,9 @@ import java.util.Set;
 
 @Document(collection = "chains")
 @Data
+@Builder(setterPrefix = "with")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonDeserialize(builder = Chains.ChainsBuilder.class)
 public class Chains {
     @Id
     private String id;

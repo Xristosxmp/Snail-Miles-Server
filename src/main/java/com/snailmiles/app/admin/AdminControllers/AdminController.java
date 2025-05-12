@@ -1,15 +1,13 @@
 package com.snailmiles.app.admin.AdminControllers;
 
-import com.snailmiles.app.Models.Category;
-import com.snailmiles.app.Models.Chains;
-import com.snailmiles.app.Models.Offer;
+import com.snailmiles.app.Models.*;
 import com.snailmiles.app.admin.AdminControllers.AdminDTOS.AdminUserUpdateRequest;
 import com.snailmiles.app.admin.AdminControllers.AdminDTOS.OfferCreateRequest;
 import com.snailmiles.app.admin.responses.AdminUsersResponse;
-import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repositories.UserRepository;
 import com.snailmiles.app.admin.services.categories.AdminCategoriesService;
 import com.snailmiles.app.admin.services.chains.AdminChainService;
+import com.snailmiles.app.admin.services.company.AdminCompanyService;
 import com.snailmiles.app.admin.services.offers.AdminOffersService;
 import com.snailmiles.app.admin.services.users.AdminUserService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,6 +34,7 @@ public class AdminController {
     private final AdminCategoriesService categoriesService;
     private final AdminOffersService offersService;
     private final AdminChainService chainService;
+    private final AdminCompanyService companyService;
 
     @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public AdminUsersResponse getUsersInfo() {
@@ -79,6 +78,19 @@ public class AdminController {
                 .withDiscount(discount)
                 .withRequired_points(required_points)
                 .build());
+    }
+
+    @PostMapping("/api/chain/create")
+    public ResponseEntity<Void> createChain(@RequestParam String name, @RequestParam String companyId) {
+        return chainService.createChain(name,companyId);
+    }
+
+    @PostMapping(value = "/api/company/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> createCompany(
+            @RequestParam("name") String name,
+            @RequestParam("category_id") String categoryId,
+            @RequestParam(value = "image", required = true) MultipartFile imageFile){
+        return companyService.createCompany(name,categoryId,imageFile);
     }
 
 

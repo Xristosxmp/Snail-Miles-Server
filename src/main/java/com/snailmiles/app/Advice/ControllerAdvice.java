@@ -69,7 +69,7 @@ public class ControllerAdvice {
         String token = SecurityConfig.generateNewToken();
         User u = ex.getUser();
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR, 1);
+        calendar.add(Calendar.MINUTE, 10);
         u.setTokenExpiration(calendar.getTime());
         u.setToken(token);
         userRepository.save(u);
