@@ -18,9 +18,6 @@ import java.util.Map;
 public class WebSocketController {
 
     private final SimpMessagingTemplate messagingTemplate;
-
-    @Autowired
-    @Qualifier("socketSessions")
     private final Map<String, String> socketSessions;
 
     @PostMapping("/transact")

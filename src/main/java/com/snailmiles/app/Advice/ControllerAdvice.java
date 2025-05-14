@@ -1,10 +1,12 @@
 package com.snailmiles.app.Advice;
 
 import com.snailmiles.app.Config.SecurityConfig;
+import com.snailmiles.app.DTO.transfer.InvalidTransferResponse;
 import com.snailmiles.app.Exceptions.*;
 import com.snailmiles.app.Exceptions.categories.CategoriesException;
 import com.snailmiles.app.Exceptions.expiredApiKey.ExpiredApiKeyException;
 import com.snailmiles.app.Exceptions.expiredApiKey.NewApiResponse;
+import com.snailmiles.app.Exceptions.transfer.InvalidTransferException;
 import com.snailmiles.app.Models.User;
 import com.snailmiles.app.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -74,6 +76,12 @@ public class ControllerAdvice {
         u.setToken(token);
         userRepository.save(u);
         return NewApiResponse.builder().withToken(token).build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidTransferException.class)
+    public InvalidTransferResponse handleInvalidTransferException(InvalidTransferException ex){
+        return InvalidTransferResponse.builder().withStatus(400).withMessage(ex.getMessage()).build();
     }
 
 }
